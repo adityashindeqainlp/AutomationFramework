@@ -1,7 +1,13 @@
 package main;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
@@ -16,12 +22,24 @@ import jdk.javadoc.doclet.Reporter;
 public class BaseTest extends Base {
 
 	@BeforeSuite
-	public void launchBrowser() {
+	public void launchBrowser() throws IOException {
 
-		WebDriverManager.chromedriver().setup();
-		driver = new ChromeDriver();
+		FileInputStream fis = new FileInputStream(".\\Resource\\config.properties");
+		Properties prop = new Properties();
+		prop.load(fis);
+
+		if (prop.getProperty("browser").equalsIgnoreCase("chrome")) {
+
+			WebDriverManager.chromedriver().setup();
+			driver = new ChromeDriver();
+		} else {
+
+			WebDriverManager.edgedriver().setup();
+			driver = new EdgeDriver();
+
+		}
 		driver.manage().window().maximize();
-		driver.get("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");
+		driver.get(prop.getProperty("url"));
 
 	}
 
@@ -30,8 +48,6 @@ public class BaseTest extends Base {
 
 		loginPage = new LoginPage(driver);
 		dashboard = new Dashboard(driver);
-
-		System.out.println("Invoking Page Object");
 
 	}
 

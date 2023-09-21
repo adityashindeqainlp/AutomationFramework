@@ -63,8 +63,6 @@ public class LoginPage extends BaseTest{
 		
 	}
 	
-	
-	
 	public String loginValidationUsingNegativeData(String username , String password) {
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 		userNameField.sendKeys(username);
